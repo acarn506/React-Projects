@@ -7,37 +7,37 @@ const Review = () => {
     const [value, setValue] = useState(0)
     const [persons, setPersons] = useState(data)
 
-    const checkValue = (number) => {
-        if (number > persons.length - 1) {
-            return 0
+    useEffect( () => {
+        const lastIndex = persons.length - 1
+
+        if (value > lastIndex) {
+            setValue(0)
         }
 
-        if (number < 0) {
-            return persons.length - 1
+        if (value < 0) {
+            setValue(lastIndex)
         }
 
-        return number
-    }
-
-    const switchPerson = (direction) => {
-        if (direction === 'prev') {
-            let idx = value - 1
-            setValue(checkValue(idx))
-        }
-
-        if (direction === 'next') {
-            let idx = value + 1
-            setValue(checkValue(idx))
-        }
-    } 
+    }, [value, persons])
 
     return (
         <>
         {
-            persons.map( person => {
+            persons.map( (person, idx) => {
+
                 const {id, image, name, title, quote} = person
+
+                let position = 'nextSlide'
+
+                if (idx === value) {
+                    position = 'activeSlide'
+                }
+
+                if (idx === value - 1 || (value === 0 && idx === persons.length - 1) ) {
+                    position = 'lastSlide';
+                }
                 return (
-                    <article key='id'>
+                    <article className={position} key={id}>
                         <img src={image} alt={name} className='person-img'/>
                         <h4>{name}</h4>
                         <p className='title'>{title}</p>
@@ -48,10 +48,10 @@ const Review = () => {
             })
         }
             <button className='prev'>
-            <FiChevronLeft onClick={() => switchPerson('prev')}/>
+            <FiChevronLeft onClick={() => setValue(value - 1)}/>
             </button>
             <button className='next'>
-            <FiChevronRight onClick={() => switchPerson('prev')}/>
+            <FiChevronRight onClick={() => setValue(value + 1)}/>
             </button>
         </>
        
