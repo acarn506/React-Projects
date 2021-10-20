@@ -20,6 +20,15 @@ const Review = () => {
 
     }, [value, persons])
 
+    useEffect(() => {
+        let slider = setInterval( () => {
+            setValue(value + 1)
+        }, 3000)
+
+        return () => clearInterval(slider)
+
+    }, [value])
+
     return (
         <>
         {
